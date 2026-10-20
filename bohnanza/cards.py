@@ -9,31 +9,62 @@ from typing import Iterable
 
 @dataclass(frozen=True, slots=True)
 class BeanType:
-    """A bean variety and its number of cards in the base-game deck."""
+    """A bean variety, its deck quantity, and its beanometer."""
 
     name: str
     card_count: int
+    beanometer: tuple[int | None, int | None, int | None, int | None]
 
     def __post_init__(self) -> None:
         if not self.name.strip():
             raise ValueError("Bean type name cannot be empty")
         if self.card_count <= 0:
             raise ValueError("Bean card count must be positive")
+        if len(self.beanometer) != 4:
+            raise ValueError("A beanometer needs one threshold per coin value")
+        thresholds = [value for value in self.beanometer if value is not None]
+        if not thresholds:
+            raise ValueError("A beanometer needs at least one reachable coin value")
+        if any(value <= 0 for value in thresholds):
+            raise ValueError("Beanometer thresholds must be positive")
+        if any(a >= b for a, b in zip(thresholds, thresholds[1:])):
+            raise ValueError("Beanometer thresholds must strictly increase")
 
 
-# Classic base-game quantities (130 cards total).
+# Classic base-game quantities (130 cards total). The beanometer lists how many
+# beans a harvest needs for 1, 2, 3, and 4 coins; ``None`` marks an unreachable
+# coin value.
 BEAN_TYPES: tuple[BeanType, ...] = (
-    BeanType("Garden", 6),
-    BeanType("Cocoa", 4),
-    BeanType("Wax", 22),
-    BeanType("Blue", 20),
-    BeanType("Chili", 18),
-    BeanType("Stink", 16),
-    BeanType("Green", 14),
-    BeanType("Soy", 12),
-    BeanType("Black-eyed", 10),
-    BeanType("Red", 8),
+    BeanType("Garden", 6, (None, 2, 3, None)),
+    BeanType("Cocoa", 4, (None, 2, 3, 4)),
+    BeanType("Wax", 22, (4, 7, 9, 11)),
+    BeanType("Blue", 20, (4, 6, 8, 10)),
+    BeanType("Chili", 18, (3, 6, 8, 9)),
+    BeanType("Stink", 16, (3, 5, 7, 8)),
+    BeanType("Green", 14, (3, 5, 6, 7)),
+    BeanType("Soy", 12, (2, 4, 6, 7)),
+    BeanType("Black-eyed", 10, (2, 4, 5, 6)),
+    BeanType("Red", 8, (2, 3, 4, 5)),
 )
+
+BEAN_TYPES_BY_NAME: dict[str, BeanType] = {bean.name: bean for bean in BEAN_TYPES}
+
+
+def coins_for(bean: str, count: int) -> int:
+    """Coins earned by harvesting ``count`` cards of one bean variety."""
+
+    try:
+        bean_type = BEAN_TYPES_BY_NAME[bean]
+    except KeyError as exc:
+        raise ValueError(f"Unknown bean type: {bean}") from exc
+    if count < 0:
+        raise ValueError("Cannot harvest a negative number of beans")
+
+    coins = 0
+    for value, threshold in enumerate(bean_type.beanometer, start=1):
+        if threshold is not None and count >= threshold:
+            coins = value
+    return coins
 
 
 class Deck:
