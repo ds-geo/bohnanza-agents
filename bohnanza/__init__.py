@@ -1,7 +1,9 @@
 """Core components for the Bohnanza game engine."""
 
 from .cards import BEAN_TYPES, BEAN_TYPES_BY_NAME, BeanType, Deck, coins_for
+from .game import Game, GameConfig, GameResult
 from .player import BeanField, Player
+from .trade import TradeOffer, TradeStatus, TradeValidator
 from .turn import Turn, TurnPhase
 
 __all__ = [
@@ -10,7 +12,13 @@ __all__ = [
     "BeanField",
     "BeanType",
     "Deck",
+    "Game",
+    "GameConfig",
+    "GameResult",
     "Player",
+    "TradeOffer",
+    "TradeStatus",
+    "TradeValidator",
     "Turn",
     "TurnPhase",
     "coins_for",
