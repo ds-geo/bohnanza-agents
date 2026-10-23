@@ -3,6 +3,7 @@
 from .cards import BEAN_TYPES, BEAN_TYPES_BY_NAME, BeanType, Deck, coins_for
 from .agents import Agent, Agent1, Agent2, RuleBasedAgent, StrategicPolicyAgent
 from .game import Game, GameConfig, GameResult
+from .events import configure_json_logging
 from .player import BeanField, Player
 from .trade import TradeOffer, TradeStatus, TradeValidator
 from .turn import Turn, TurnPhase
@@ -28,4 +29,5 @@ __all__ = [
     "Turn",
     "TurnPhase",
     "coins_for",
+    "configure_json_logging",
 ]
