@@ -11,6 +11,9 @@ from bohnanza import (
     Game,
     GameConfig,
     Player,
+    Agent1,
+    Agent2,
+    TradeValidator,
     Turn,
     TurnPhase,
     coins_for,
@@ -68,9 +71,33 @@ class TestScoring:
         player.fields[0].plant("Blue")
         player.fields[0].plant("Blue")
 
-        earned, _ = player.harvest(0)
+        earned, discarded = player.harvest(0)
         assert earned == 1
         assert player.coins == 1
+        assert discarded == ["Blue"] * 3
+
+    def test_harvested_coin_cards_leave_play(self):
+        player = Player(name="Test")
+        player.fields[0].beans = ["Blue"] * 6
+
+        earned, discarded = player.harvest(0)
+
+        assert earned == 2
+        assert discarded == ["Blue"] * 4
+        assert player.coins == 2
+
+    def test_deck_counts_each_exhaustion_episode_once(self):
+        deck = Deck(bean_types=[BeanType("Test", 1, (1, None, None, None))], seed=1)
+
+        assert deck.draw() == "Test"
+        assert deck.draw() is None
+        assert deck.draw() is None
+        assert deck.times_exhausted == 1
+
+        deck.discard("Test")
+        assert deck.draw() == "Test"
+        assert deck.draw() is None
+        assert deck.times_exhausted == 2
 
     def test_all_bean_types_have_valid_scoring(self):
         """Test that all defined bean types have valid scoring."""
@@ -248,6 +275,102 @@ class TestGameIntegration:
         """Test that duplicate player names are rejected."""
         with pytest.raises(ValueError, match="unique"):
             GameConfig(player_names=["Alice", "Alice"])
+
+    def test_agent1_vs_agent2_full_game_conserves_cards(self):
+        """One complete game should finish without illegal moves or lost cards."""
+        game = Game(GameConfig(player_names=["Agent 1", "Agent 2"], seed=42))
+        agents = [Agent1(), Agent2()]
+        initial_card_total = sum(bean.card_count for bean in BEAN_TYPES)
+
+        def assert_conserved(turn=None):
+            cards_in_play = game.deck.total_count
+            cards_in_play += sum(len(player.hand) for player in game.players)
+            cards_in_play += sum(
+                len(bean_field.beans)
+                for player in game.players
+                for bean_field in player.fields
+            )
+            cards_in_play += sum(player.coins for player in game.players)
+            if turn is not None:
+                cards_in_play += len(turn.face_up)
+                cards_in_play += sum(
+                    len(cards) for cards in turn.pending.values()
+                )
+            assert cards_in_play == initial_card_total
+
+        assert_conserved()
+        while not game.is_over:
+            turn = game.start_turn()
+            active_index = game.active_index
+            active = game.players[active_index]
+            active_agent = agents[active_index]
+
+            for _ in range(2):
+                if not active.hand:
+                    break
+                bean = active.hand[0]
+                while not active.legal_fields(bean):
+                    field_index = active_agent.harvest(active)
+                    assert field_index is not None
+                    turn.harvest(active_index, field_index)
+                    assert_conserved(turn)
+                field_index = active_agent.plant(active, bean)
+                turn.plant_from_hand(field_index)
+                assert_conserved(turn)
+
+            turn.end_plant_phase()
+            assert_conserved(turn)
+            validator = TradeValidator(game.players, active_index, len(turn.face_up))
+            for responder_index in range(len(game.players)):
+                if responder_index == active_index:
+                    continue
+                offer = active_agent.propose(turn, responder_index)
+                if offer is None:
+                    continue
+                is_valid, error = validator.validate(offer)
+                assert is_valid, error
+                if not agents[responder_index].respond(turn, offer):
+                    offer.reject()
+                    continue
+                offer.accept()
+                can_execute, error = validator.can_execute(offer)
+                assert can_execute, error
+                turn.transfer(
+                    offer.proposer,
+                    offer.responder,
+                    hand_indices=() if offer.proposer_face_up else offer.proposer_gives,
+                    face_up_indices=offer.proposer_gives if offer.proposer_face_up else (),
+                )
+                turn.transfer(
+                    offer.responder,
+                    offer.proposer,
+                    hand_indices=offer.responder_gives,
+                )
+                assert_conserved(turn)
+
+            turn.end_trade_phase()
+            assert_conserved(turn)
+            for player_index, player in enumerate(game.players):
+                while turn.pending[player_index]:
+                    bean = turn.pending[player_index][0]
+                    while not player.legal_fields(bean):
+                        field_index = agents[player_index].harvest(player)
+                        assert field_index is not None
+                        turn.harvest(player_index, field_index)
+                        assert_conserved(turn)
+                    field_index = agents[player_index].plant(player, bean)
+                    turn.plant_pending(player_index, 0, field_index)
+                    assert_conserved(turn)
+
+            turn.end_plant_traded_phase()
+            turn.draw_three()
+            assert_conserved(turn)
+            game.end_turn()
+
+        result = game.finalize()
+        assert result.total_turns == game.total_turns
+        assert result.deck_exhaustions >= game.config.max_deck_exhaustions
+        assert_conserved()
 
 
 if __name__ == "__main__":

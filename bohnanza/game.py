@@ -62,8 +62,6 @@ class Game:
         ]
         self.active_index = 0
         self.turn: Turn | None = None
-        self.deck_exhaustions = 0
-        self._deck_was_empty_last_turn = False
         self.total_turns = 0
         self.is_over = False
 
@@ -80,6 +78,12 @@ class Game:
         """The player whose turn it currently is."""
 
         return self.players[self.active_index]
+
+    @property
+    def deck_exhaustions(self) -> int:
+        """Number of times drawing found both piles empty."""
+
+        return self.deck.times_exhausted
 
     def start_turn(self) -> Turn:
         """Begin a new turn for the active player."""
@@ -102,26 +106,18 @@ class Game:
         if self.turn.phase is not TurnPhase.DONE:
             raise RuntimeError("Cannot end a turn before it is complete")
 
-        # Check if deck was exhausted this turn
-        if self.deck.draw_count == 0:
-            if self._deck_was_empty_last_turn:
-                self.deck_exhaustions += 1
-                self._deck_was_empty_last_turn = False
-            else:
-                self._deck_was_empty_last_turn = True
-
         self.total_turns += 1
         self.active_index = (self.active_index + 1) % len(self.players)
         self.turn = None
 
         # Check for game end
-        if self.deck_exhaustions >= self.config.max_deck_exhaustions:
+        if self.deck.times_exhausted >= self.config.max_deck_exhaustions:
             self.is_over = True
 
     def check_game_over(self) -> bool:
         """Check if the game should end based on deck exhaustion."""
 
-        return self.deck_exhaustions >= self.config.max_deck_exhaustions
+        return self.deck.times_exhausted >= self.config.max_deck_exhaustions
 
     def finalize(self) -> GameResult:
         """Harvest all remaining fields and compute final scores."""
@@ -158,7 +154,7 @@ class Game:
             winner=winner,
             final_scores=final_scores,
             total_turns=self.total_turns,
-            deck_exhaustions=self.deck_exhaustions,
+            deck_exhaustions=self.deck.times_exhausted,
         )
 
     def get_player_state(self, player_name: str) -> dict:

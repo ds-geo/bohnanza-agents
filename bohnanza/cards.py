@@ -87,6 +87,8 @@ class Deck:
         self._random = random.Random(seed)
         self._draw_pile = [bean.name for bean in types for _ in range(bean.card_count)]
         self._discard_pile: list[str] = []
+        self.times_exhausted = 0
+        self._counted_current_exhaustion = False
         self._random.shuffle(self._draw_pile)
 
     @property
@@ -111,8 +113,13 @@ class Deck:
         """Draw the next bean card, returning ``None`` if the deck is empty."""
 
         if not self._draw_pile and not self._reshuffle_discards():
+            if not self._counted_current_exhaustion:
+                self.times_exhausted += 1
+                self._counted_current_exhaustion = True
             return None
-        return self._draw_pile.pop()
+        bean = self._draw_pile.pop()
+        self._counted_current_exhaustion = False
+        return bean
 
     def discard(self, bean: str) -> None:
         """Place a bean card in the discard pile."""

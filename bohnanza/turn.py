@@ -179,7 +179,7 @@ class Turn:
     # Harvesting, which any player may do at any point in the turn.
 
     def harvest(self, player_index: int, field_index: int) -> int:
-        """Harvest a field, discarding its cards and returning the coins earned."""
+        """Harvest a field, discarding unconverted cards and returning coins."""
 
         if self.phase is TurnPhase.DONE:
             raise ValueError("Cannot harvest after the turn has ended")

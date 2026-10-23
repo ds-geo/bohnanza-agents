@@ -132,11 +132,11 @@ class Player:
         return bean
 
     def harvest(self, field_index: int) -> tuple[int, list[str]]:
-        """Harvest a field, adding its coins and returning the cards removed."""
+        """Harvest a field, adding coins and returning unconverted cards."""
 
         earned, cards = self._field_at(field_index).harvest()
         self.coins += earned
-        return earned, cards
+        return earned, cards[earned:]
 
     def _field_at(self, field_index: int) -> BeanField:
         if field_index < 0:
