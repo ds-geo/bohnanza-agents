@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Iterable
 
+from .events import log_event
+
 
 class TradeStatus(Enum):
     """The status of a trade proposal."""
@@ -58,6 +60,15 @@ class TradeOffer:
             raise ValueError("Proposer card indices must be unique")
         if len(set(self.responder_gives)) != len(self.responder_gives):
             raise ValueError("Responder card indices must be unique")
+        log_event(
+            "trade.offered",
+            proposer=self.proposer,
+            responder=self.responder,
+            proposer_gives=self.proposer_gives,
+            responder_gives=self.responder_gives,
+            proposer_face_up=self.proposer_face_up,
+            counter=self.counter_to is not None,
+        )
 
     def is_empty(self) -> bool:
         """Whether this offer involves no cards (a donation)."""
@@ -75,6 +86,7 @@ class TradeOffer:
         if self.status is not TradeStatus.PENDING:
             raise ValueError(f"Cannot accept a trade with status {self.status}")
         self.status = TradeStatus.ACCEPTED
+        self._log_status("trade.accepted")
 
     def reject(self) -> None:
         """Mark this offer as rejected."""
@@ -82,6 +94,7 @@ class TradeOffer:
         if self.status is not TradeStatus.PENDING:
             raise ValueError(f"Cannot reject a trade with status {self.status}")
         self.status = TradeStatus.REJECTED
+        self._log_status("trade.rejected")
 
     def counter(self, new_offer: TradeOffer) -> None:
         """Replace this offer with a counter-offer."""
@@ -90,6 +103,18 @@ class TradeOffer:
             raise ValueError(f"Cannot counter a trade with status {self.status}")
         self.status = TradeStatus.COUNTERED
         new_offer.counter_to = self
+        self._log_status("trade.countered")
+
+    def _log_status(self, event: str) -> None:
+        log_event(
+            event,
+            proposer=self.proposer,
+            responder=self.responder,
+            proposer_gives=self.proposer_gives,
+            responder_gives=self.responder_gives,
+            proposer_face_up=self.proposer_face_up,
+            status=self.status.value,
+        )
 
 
 class TradeValidator:

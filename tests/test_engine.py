@@ -1,5 +1,8 @@
 """Sanity tests for scoring and forced-order mechanics."""
 
+import json
+import logging
+
 import pytest
 
 from bohnanza import (
@@ -11,6 +14,7 @@ from bohnanza import (
     Game,
     GameConfig,
     Player,
+    TradeOffer,
     Agent1,
     Agent2,
     TradeValidator,
@@ -371,6 +375,43 @@ class TestGameIntegration:
         assert result.total_turns == game.total_turns
         assert result.deck_exhaustions >= game.config.max_deck_exhaustions
         assert_conserved()
+
+
+class TestStructuredLogging:
+    """Structured events are valid JSON and include game state details."""
+
+    def test_offer_status_and_player_state_are_json_logged(self, caplog):
+        caplog.set_level(logging.INFO, logger="bohnanza.events")
+        players = [
+            Player(name="Alice", hand=["Blue"]),
+            Player(name="Bob", hand=["Red"]),
+        ]
+        turn = Turn(players=players, deck=Deck(seed=7), active_index=0)
+
+        accepted = TradeOffer(
+            proposer=0,
+            responder=1,
+            proposer_gives=[0],
+            responder_gives=[0],
+        )
+        accepted.accept()
+        rejected = TradeOffer(proposer=1, responder=0, proposer_gives=[0])
+        rejected.reject()
+        turn.plant_from_hand(0)
+
+        events = [json.loads(record.message) for record in caplog.records]
+        event_names = [event["event"] for event in events]
+        assert event_names == [
+            "trade.offered",
+            "trade.accepted",
+            "trade.offered",
+            "trade.rejected",
+            "player.planted",
+        ]
+        planted = events[-1]
+        assert planted["player"] == "Alice"
+        assert planted["hand"] == []
+        assert planted["fields"][0]["beans"] == ["Blue"]
 
 
 if __name__ == "__main__":

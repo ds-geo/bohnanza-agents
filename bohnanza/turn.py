@@ -12,6 +12,7 @@ from enum import Enum
 from typing import Iterable, Sequence
 
 from .cards import Deck
+from .events import log_event
 from .player import Player
 
 PLANTS_PER_TURN = 2
@@ -65,6 +66,7 @@ class Turn:
             raise ValueError(f"Already planted {PLANTS_PER_TURN} cards this turn")
         bean = self.active_player.plant_from_front(field_index)
         self.plants_this_phase += 1
+        self._log_player_state("player.planted", self.active_index, bean=bean)
         return bean
 
     def end_plant_phase(self) -> list[str]:
@@ -118,6 +120,16 @@ class Turn:
         ]
         moved.reverse()
         self.pending[to_player].extend(moved)
+        log_event(
+            "trade.transferred",
+            from_player=self.players[from_player].name,
+            to_player=self.players[to_player].name,
+            cards=moved,
+            players=[
+                self._player_state(from_player),
+                self._player_state(to_player),
+            ],
+        )
         return moved
 
     def end_trade_phase(self) -> None:
@@ -146,6 +158,9 @@ class Turn:
         # Validate before removing the card, so a failed planting leaves state intact.
         self.players[player_index].plant(bean, field_index)
         del cards[card_index]
+        self._log_player_state(
+            "player.planted_pending", player_index, bean=bean
+        )
         return bean
 
     def end_plant_traded_phase(self) -> None:
@@ -174,6 +189,7 @@ class Turn:
             drawn.append(bean)
         self.active_player.add_to_hand(drawn)
         self.phase = TurnPhase.DONE
+        self._log_player_state("player.drew", self.active_index, cards=drawn)
         return drawn
 
     # Harvesting, which any player may do at any point in the turn.
@@ -191,7 +207,30 @@ class Turn:
         earned, cards = player.harvest(field_index)
         for bean in cards:
             self.deck.discard(bean)
+        self._log_player_state(
+            "player.harvested",
+            player_index,
+            field_index=field_index,
+            discarded=cards,
+            coins_earned=earned,
+        )
         return earned
+
+    def _log_player_state(self, event: str, player_index: int, **data: object) -> None:
+        log_event(event, **self._player_state(player_index), **data)
+
+    def _player_state(self, player_index: int) -> dict[str, object]:
+        player = self.players[player_index]
+        return {
+            "player": player.name,
+            "hand": list(player.hand),
+            "fields": [
+                {"bean_type": bean_field.bean_type, "beans": list(bean_field.beans)}
+                for bean_field in player.fields
+            ],
+            "coins": player.coins,
+            "pending": list(self.pending[player_index]),
+        }
 
     def _require_phase(self, expected: TurnPhase) -> None:
         if self.phase is not expected:

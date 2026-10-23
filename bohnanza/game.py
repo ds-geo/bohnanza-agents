@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Iterable
 
 from .cards import Deck, coins_for
+from .events import log_event
 from .player import Player
 from .turn import Turn, TurnPhase
 
@@ -135,6 +136,22 @@ class Game:
                     for bean in cards:
                         self.deck.discard(bean)
                     final_scores[player.name] += earned
+                    log_event(
+                        "player.final_harvested",
+                        player=player.name,
+                        field_index=field_index,
+                        discarded=cards,
+                        coins_earned=earned,
+                        hand=list(player.hand),
+                        fields=[
+                            {
+                                "bean_type": bean_field.bean_type,
+                                "beans": list(bean_field.beans),
+                            }
+                            for bean_field in player.fields
+                        ],
+                        coins=player.coins,
+                    )
 
         # Determine winner
         winner = max(final_scores, key=final_scores.get)
@@ -149,6 +166,14 @@ class Game:
                     next(p for p in self.players if p.name == name).hand
                 )
             )
+
+        log_event(
+            "game.scored",
+            winner=winner,
+            scores=final_scores,
+            total_turns=self.total_turns,
+            deck_exhaustions=self.deck.times_exhausted,
+        )
 
         return GameResult(
             winner=winner,
