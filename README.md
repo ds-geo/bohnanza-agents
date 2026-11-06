@@ -46,12 +46,17 @@ above. The CLI reports aggregate metrics and does not enable event logging.
 
 The built-in transport uses Python's standard library, so there is no provider
 SDK to install. Create an API key with a provider that supports the
-OpenAI-compatible Chat Completions format, then set the key and configure that
-provider's API root. Keep keys out of source files and logs:
+OpenAI-compatible Chat Completions format, then put the key in `.env` or set it
+in your shell. The client checks the process environment first, then looks for
+`.env` in the working directory or repository root. Keep keys out of source
+files and logs:
 
 ```sh
 export LLM_API_KEY="your-provider-key"
 ```
+
+You can instead store it in `.env` as `LLM_API_KEY=your-provider-key`; you do
+not need to source the file manually.
 
 The client takes an explicit model name, API base URL, and optional
 per-million-token rates. The default transport posts to

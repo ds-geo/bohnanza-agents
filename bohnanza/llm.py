@@ -12,11 +12,40 @@ import os
 import json
 import socket
 import time
+from pathlib import Path
 from typing import Callable, Protocol
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from .events import log_event
+
+
+def _dotenv_value(name: str) -> str | None:
+    """Read one simple KEY=value entry from a project or working-dir .env."""
+    candidates = [Path.cwd() / ".env", Path(__file__).resolve().parents[1] / ".env"]
+    visited: set[Path] = set()
+    for path in candidates:
+        if path in visited:
+            continue
+        visited.add(path)
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except FileNotFoundError:
+            continue
+        for line in lines:
+            entry = line.strip()
+            if not entry or entry.startswith("#"):
+                continue
+            if entry.startswith("export "):
+                entry = entry[len("export "):].lstrip()
+            key, separator, value = entry.partition("=")
+            if not separator or key.strip() != name:
+                continue
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                value = value[1:-1]
+            return value
+    return None
 
 
 @dataclass(frozen=True)
@@ -109,7 +138,7 @@ class CompatibleHTTPTransport:
     """
 
     def __init__(self, *, api_key_env: str = "LLM_API_KEY", base_url: str) -> None:
-        api_key = os.environ.get(api_key_env)
+        api_key = os.environ.get(api_key_env) or _dotenv_value(api_key_env)
         if not api_key:
             raise RuntimeError(
                 f"Missing API key: set the {api_key_env} environment variable"
