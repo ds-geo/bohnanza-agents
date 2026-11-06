@@ -29,6 +29,15 @@ def configure_json_logging(log_file: str | None = None) -> None:
     _EVENT_LOGGER.propagate = False
 
 
+def disable_json_logging() -> None:
+    """Disable event output and close handlers installed by this module."""
+    for handler in _EVENT_LOGGER.handlers[:]:
+        _EVENT_LOGGER.removeHandler(handler)
+        handler.close()
+    _EVENT_LOGGER.setLevel(logging.NOTSET)
+    _EVENT_LOGGER.propagate = False
+
+
 def log_event(event: str, **data: Any) -> None:
     """Emit one JSON-encoded event through the standard logging system."""
 

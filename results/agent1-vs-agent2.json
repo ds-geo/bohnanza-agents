@@ -1,0 +1,1018 @@
+{
+  "average_scores": {
+    "Agent1": 8.22,
+    "Agent2": 19.3
+  },
+  "average_turns": 82.52,
+  "games": 100,
+  "matchup": [
+    "Agent1",
+    "Agent2"
+  ],
+  "results": [
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 1,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 11,
+        "Agent2": 19
+      },
+      "seed": 2,
+      "total_turns": 74,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 23
+      },
+      "seed": 3,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 13,
+        "Agent2": 22
+      },
+      "seed": 4,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 20
+      },
+      "seed": 5,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 20
+      },
+      "seed": 6,
+      "total_turns": 80,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 16
+      },
+      "seed": 7,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 24
+      },
+      "seed": 8,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 20
+      },
+      "seed": 9,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 16
+      },
+      "seed": 10,
+      "total_turns": 91,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 11,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 12,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 17
+      },
+      "seed": 13,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 17
+      },
+      "seed": 14,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 21
+      },
+      "seed": 15,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 20
+      },
+      "seed": 16,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 17,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 22
+      },
+      "seed": 18,
+      "total_turns": 72,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 14
+      },
+      "seed": 19,
+      "total_turns": 82,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 4,
+        "Agent2": 23
+      },
+      "seed": 20,
+      "total_turns": 89,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 22
+      },
+      "seed": 21,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 21
+      },
+      "seed": 22,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 14,
+        "Agent2": 17
+      },
+      "seed": 23,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 25
+      },
+      "seed": 24,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 19
+      },
+      "seed": 25,
+      "total_turns": 93,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 26,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 18
+      },
+      "seed": 27,
+      "total_turns": 89,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 15,
+        "Agent2": 15
+      },
+      "seed": 28,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 21
+      },
+      "seed": 29,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 15
+      },
+      "seed": 30,
+      "total_turns": 84,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 22
+      },
+      "seed": 31,
+      "total_turns": 84,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 13,
+        "Agent2": 15
+      },
+      "seed": 32,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 18
+      },
+      "seed": 33,
+      "total_turns": 80,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 18
+      },
+      "seed": 34,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 21
+      },
+      "seed": 35,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 19
+      },
+      "seed": 36,
+      "total_turns": 90,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 21
+      },
+      "seed": 37,
+      "total_turns": 90,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 22
+      },
+      "seed": 38,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 24
+      },
+      "seed": 39,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 20
+      },
+      "seed": 40,
+      "total_turns": 92,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 18
+      },
+      "seed": 41,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 26
+      },
+      "seed": 42,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 43,
+      "total_turns": 84,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 21
+      },
+      "seed": 44,
+      "total_turns": 72,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 20
+      },
+      "seed": 45,
+      "total_turns": 82,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 17
+      },
+      "seed": 46,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 14
+      },
+      "seed": 47,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 22
+      },
+      "seed": 48,
+      "total_turns": 75,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 19
+      },
+      "seed": 49,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 16
+      },
+      "seed": 50,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 20
+      },
+      "seed": 51,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 19
+      },
+      "seed": 52,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 53,
+      "total_turns": 90,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 16
+      },
+      "seed": 54,
+      "total_turns": 92,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 18
+      },
+      "seed": 55,
+      "total_turns": 82,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 12,
+        "Agent2": 22
+      },
+      "seed": 56,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 18
+      },
+      "seed": 57,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 19
+      },
+      "seed": 58,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 18
+      },
+      "seed": 59,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 22
+      },
+      "seed": 60,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 24
+      },
+      "seed": 61,
+      "total_turns": 80,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 20
+      },
+      "seed": 62,
+      "total_turns": 75,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 19
+      },
+      "seed": 63,
+      "total_turns": 89,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 11,
+        "Agent2": 22
+      },
+      "seed": 64,
+      "total_turns": 72,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 21
+      },
+      "seed": 65,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 18
+      },
+      "seed": 66,
+      "total_turns": 92,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 18
+      },
+      "seed": 67,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 21
+      },
+      "seed": 68,
+      "total_turns": 91,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 24
+      },
+      "seed": 69,
+      "total_turns": 84,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 20
+      },
+      "seed": 70,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 16
+      },
+      "seed": 71,
+      "total_turns": 82,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 12
+      },
+      "seed": 72,
+      "total_turns": 94,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 13,
+        "Agent2": 23
+      },
+      "seed": 73,
+      "total_turns": 70,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 21
+      },
+      "seed": 74,
+      "total_turns": 76,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 15
+      },
+      "seed": 75,
+      "total_turns": 91,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 17
+      },
+      "seed": 76,
+      "total_turns": 87,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 20
+      },
+      "seed": 77,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 21
+      },
+      "seed": 78,
+      "total_turns": 73,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 11,
+        "Agent2": 18
+      },
+      "seed": 79,
+      "total_turns": 79,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 19
+      },
+      "seed": 80,
+      "total_turns": 89,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 16
+      },
+      "seed": 81,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 24
+      },
+      "seed": 82,
+      "total_turns": 90,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 21
+      },
+      "seed": 83,
+      "total_turns": 89,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 12,
+        "Agent2": 20
+      },
+      "seed": 84,
+      "total_turns": 78,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 18
+      },
+      "seed": 85,
+      "total_turns": 91,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 15
+      },
+      "seed": 86,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 17
+      },
+      "seed": 87,
+      "total_turns": 88,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 12,
+        "Agent2": 22
+      },
+      "seed": 88,
+      "total_turns": 75,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 19
+      },
+      "seed": 89,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 23
+      },
+      "seed": 90,
+      "total_turns": 71,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 19
+      },
+      "seed": 91,
+      "total_turns": 80,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 4,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 18
+      },
+      "seed": 92,
+      "total_turns": 85,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 21
+      },
+      "seed": 93,
+      "total_turns": 91,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 10,
+        "Agent2": 21
+      },
+      "seed": 94,
+      "total_turns": 77,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 20
+      },
+      "seed": 95,
+      "total_turns": 88,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 6,
+        "Agent2": 19
+      },
+      "seed": 96,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 8,
+        "Agent2": 20
+      },
+      "seed": 97,
+      "total_turns": 83,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 9,
+        "Agent2": 18
+      },
+      "seed": 98,
+      "total_turns": 86,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 7,
+        "Agent2": 19
+      },
+      "seed": 99,
+      "total_turns": 81,
+      "winner": "Agent2"
+    },
+    {
+      "deck_exhaustions": 3,
+      "final_scores": {
+        "Agent1": 5,
+        "Agent2": 20
+      },
+      "seed": 100,
+      "total_turns": 89,
+      "winner": "Agent2"
+    }
+  ],
+  "wins": {
+    "Agent1": 0,
+    "Agent2": 100
+  }
+}
