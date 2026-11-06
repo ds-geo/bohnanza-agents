@@ -67,6 +67,23 @@ class LLMConfig:
     input_cost_per_million_tokens: float | None = None
     output_cost_per_million_tokens: float | None = None
 
+    @classmethod
+    def from_env(cls, **overrides: object) -> "LLMConfig":
+        """Build a config from LLM_MODEL and LLM_BASE_URL.
+
+        Both are required and are looked up the same way as the API key: the
+        process environment first, then a project or working-directory .env.
+        """
+        values: dict[str, str] = {}
+        for field_name, env_name in (("model", "LLM_MODEL"), ("base_url", "LLM_BASE_URL")):
+            value = os.environ.get(env_name) or _dotenv_value(env_name)
+            if not value:
+                raise RuntimeError(
+                    f"Missing LLM config: set the {env_name} environment variable"
+                )
+            values[field_name] = value
+        return cls(**values, **overrides)
+
     def __post_init__(self) -> None:
         if not self.model.strip():
             raise ValueError("model cannot be empty")

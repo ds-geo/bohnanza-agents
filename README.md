@@ -38,7 +38,10 @@ python scripts/summarize_batch.py --agents Agent1 Agent2 --games 100 --seed 1 \
   --output results/agent1-vs-agent2.json
 ```
 
-Built-in policy names are `Agent1` and `Agent2`. For example, capture a single
+Built-in policy names are `Agent1`, `Agent2`, and `Agent3`. `Agent3` plants and
+harvests with the `Agent2` policy but asks a model to propose and answer trades,
+so running it needs the LLM setup below and makes a paid API call per trade
+decision. For example, capture a single
 game with `configure_json_logging("game.jsonl")` and call `play_game` as shown
 above. The CLI reports aggregate metrics and does not enable event logging.
 
@@ -57,6 +60,17 @@ export LLM_API_KEY="your-provider-key"
 
 You can instead store it in `.env` as `LLM_API_KEY=your-provider-key`; you do
 not need to source the file manually.
+
+Agents that call a model, such as `Agent3`, also need a model name and API root.
+Both are required and are read from the same places as the key; building the
+agent fails with an error naming the missing variable. A Gemini example using
+its OpenAI-compatible endpoint:
+
+```sh
+LLM_API_KEY=your-gemini-key
+LLM_MODEL=gemini-flash-latest
+LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+```
 
 The client takes an explicit model name, API base URL, and optional
 per-million-token rates. The default transport posts to

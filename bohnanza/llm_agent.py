@@ -8,6 +8,10 @@ Bohnanza, so trade prompts include the other player's hand too.
 ``LLMAgent`` sends those prompts, parses the JSON reply, and validates the
 chosen move against the game state. Unparseable or illegal answers fall back
 to a rule-based policy so a bad reply can never break the engine.
+
+``PolicyNegotiationAgent`` (Agent 3) narrows that to negotiation only: the
+hand-crafted Agent 2 policy plants and harvests, and the model is asked solely
+to propose and answer trades.
 """
 
 from __future__ import annotations
@@ -15,10 +19,10 @@ from __future__ import annotations
 import json
 from typing import Callable, Iterable, TypeVar
 
-from .agents import Agent, RuleBasedAgent
+from .agents import Agent, RuleBasedAgent, StrategicPolicyAgent
 from .cards import coins_for
 from .events import log_event
-from .llm import LLMClient
+from .llm import LLMClient, LLMConfig
 from .player import Player
 from .trade import TradeOffer, TradeValidator
 from .turn import Turn
@@ -260,6 +264,12 @@ def _extract_object(text: str) -> object:
 _T = TypeVar("_T")
 
 
+def default_client() -> LLMClient:
+    """A client for the model named by the LLM_MODEL/LLM_BASE_URL variables."""
+
+    return LLMClient(LLMConfig.from_env())
+
+
 class LLMAgent(Agent):
     """An agent that asks an ``LLMClient`` for each decision.
 
@@ -396,3 +406,31 @@ def _check_indices(indices: list[int], bound: int, side: str) -> None:
     for index in indices:
         if index >= bound:
             raise ValueError(f"{side} index {index} is out of range")
+
+
+class PolicyNegotiationAgent(LLMAgent):
+    """A hand-crafted policy that negotiates through a model (Agent 3).
+
+    Planting and harvesting stay with ``StrategicPolicyAgent``, which already
+    plays them well and costs nothing; only the open-ended half of the game,
+    proposing and answering trades, is asked of the model. The same policy is
+    the fallback, so a failed or illegal reply plays as Agent 2 would.
+    """
+
+    def __init__(
+        self, client: LLMClient | None = None, policy: Agent | None = None
+    ) -> None:
+        super().__init__(
+            client if client is not None else default_client(),
+            fallback=policy if policy is not None else StrategicPolicyAgent(),
+        )
+
+    def plant(self, player: Player, bean: str) -> int:
+        return self.fallback.plant(player, bean)
+
+    def harvest(self, player: Player) -> int | None:
+        return self.fallback.harvest(player)
+
+
+# Short alias matching the Agent1/Agent2 policy names.
+Agent3 = PolicyNegotiationAgent
