@@ -13,6 +13,14 @@ from .llm import (
     CompatibleHTTPTransport,
     RetryableLLMError,
 )
+from .llm_agent import (
+    harvest_prompt,
+    plant_prompt,
+    propose_prompt,
+    respond_prompt,
+    serialize_player,
+    serialize_turn,
+)
 from .sim import BatchSummary, play_game, run_batch
 from .player import BeanField, Player
 from .trade import TradeOffer, TradeStatus, TradeValidator
@@ -49,6 +57,12 @@ __all__ = [
     "coins_for",
     "configure_json_logging",
     "disable_json_logging",
+    "harvest_prompt",
+    "plant_prompt",
     "play_game",
+    "propose_prompt",
+    "respond_prompt",
     "run_batch",
+    "serialize_player",
+    "serialize_turn",
 ]
