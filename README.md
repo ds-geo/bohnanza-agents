@@ -41,3 +41,39 @@ python scripts/summarize_batch.py --agents Agent1 Agent2 --games 100 --seed 1 \
 Built-in policy names are `Agent1` and `Agent2`. For example, capture a single
 game with `configure_json_logging("game.jsonl")` and call `play_game` as shown
 above. The CLI reports aggregate metrics and does not enable event logging.
+
+## LLM client setup
+
+The built-in transport uses Python's standard library, so there is no provider
+SDK to install. Create an API key with a provider that supports the
+OpenAI-compatible Chat Completions format, then set the key and configure that
+provider's API root. Keep keys out of source files and logs:
+
+```sh
+export LLM_API_KEY="your-provider-key"
+```
+
+The client takes an explicit model name, API base URL, and optional
+per-million-token rates. The default transport posts to
+`{base_url}/chat/completions` with a bearer key. It retries transient
+connection, timeout, rate-limit, and server errors. Calls emit token, cost,
+attempt, and latency metadata through the opt-in JSON event logger; prompts,
+responses, and API keys are not logged.
+
+```python
+from bohnanza import LLMClient, LLMConfig, configure_json_logging
+
+configure_json_logging("llm-calls.jsonl")
+client = LLMClient(LLMConfig(
+    model="your-provider-model-name",
+    base_url="https://provider.example/v1",
+))
+reply = client.complete("Return a short greeting.")
+print(reply.text, reply.input_tokens, reply.output_tokens)
+```
+
+Cost estimates are available when both token rates are supplied in
+`LLMConfig`; check the current model pricing before configuring them. The
+transport can be injected into `LLMClient` for offline or mock usage. If a
+provider uses a different request or response format, implement the
+`LLMTransport` protocol and pass it to `LLMClient`.

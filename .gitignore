@@ -1,2 +1,5 @@
 tests/__pycache__/*.pyc
 __pycache__/
+.env
+.env.*
+!.env.example

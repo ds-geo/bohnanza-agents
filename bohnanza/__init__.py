@@ -4,6 +4,15 @@ from .cards import BEAN_TYPES, BEAN_TYPES_BY_NAME, BeanType, Deck, coins_for
 from .agents import Agent, Agent1, Agent2, RuleBasedAgent, StrategicPolicyAgent
 from .game import Game, GameConfig, GameResult
 from .events import configure_json_logging, disable_json_logging
+from .llm import (
+    LLMCallResult,
+    LLMClient,
+    LLMConfig,
+    LLMResponse,
+    LLMTransport,
+    CompatibleHTTPTransport,
+    RetryableLLMError,
+)
 from .sim import BatchSummary, play_game, run_batch
 from .player import BeanField, Player
 from .trade import TradeOffer, TradeStatus, TradeValidator
@@ -22,8 +31,15 @@ __all__ = [
     "Game",
     "GameConfig",
     "GameResult",
+    "LLMCallResult",
+    "LLMClient",
+    "LLMConfig",
+    "LLMResponse",
+    "LLMTransport",
+    "CompatibleHTTPTransport",
     "Player",
     "RuleBasedAgent",
+    "RetryableLLMError",
     "StrategicPolicyAgent",
     "TradeOffer",
     "TradeStatus",
