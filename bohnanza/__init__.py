@@ -15,6 +15,7 @@ from .llm import (
 )
 from .llm_agent import (
     Agent3,
+    Agent4,
     LLMAgent,
     LLMParseError,
     PolicyNegotiationAgent,
@@ -39,6 +40,7 @@ __all__ = [
     "Agent1",
     "Agent2",
     "Agent3",
+    "Agent4",
     "BeanField",
     "BeanType",
     "BatchSummary",

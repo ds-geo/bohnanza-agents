@@ -9,6 +9,7 @@ Bohnanza, so trade prompts include the other player's hand too.
 chosen move against the game state. Unparseable or illegal answers fall back
 to a rule-based policy so a bad reply can never break the engine.
 
+``LLMAgent`` is Agent 4, the policy that asks the model for every decision.
 ``PolicyNegotiationAgent`` (Agent 3) narrows that to negotiation only: the
 hand-crafted Agent 2 policy plants and harvests, and the model is asked solely
 to propose and answer trades.
@@ -271,16 +272,19 @@ def default_client() -> LLMClient:
 
 
 class LLMAgent(Agent):
-    """An agent that asks an ``LLMClient`` for each decision.
+    """An agent that asks an ``LLMClient`` for every decision (Agent 4).
 
     Every reply is parsed and checked against the legal moves in the current
     state; a transport failure, an unparseable reply, or an illegal move is
     delegated to ``fallback`` (a ``RuleBasedAgent`` by default) and logged as
-    an ``llm.fallback`` event.
+    an ``llm.fallback`` event. Omitting ``client`` builds one from the
+    environment, so the agent registry can construct it with no arguments.
     """
 
-    def __init__(self, client: LLMClient, fallback: Agent | None = None) -> None:
-        self.client = client
+    def __init__(
+        self, client: LLMClient | None = None, fallback: Agent | None = None
+    ) -> None:
+        self.client = client if client is not None else default_client()
         self.fallback = fallback if fallback is not None else RuleBasedAgent()
 
     def plant(self, player: Player, bean: str) -> int:
@@ -421,7 +425,7 @@ class PolicyNegotiationAgent(LLMAgent):
         self, client: LLMClient | None = None, policy: Agent | None = None
     ) -> None:
         super().__init__(
-            client if client is not None else default_client(),
+            client,
             fallback=policy if policy is not None else StrategicPolicyAgent(),
         )
 
@@ -432,5 +436,6 @@ class PolicyNegotiationAgent(LLMAgent):
         return self.fallback.harvest(player)
 
 
-# Short alias matching the Agent1/Agent2 policy names.
+# Short aliases matching the Agent1/Agent2 policy names.
 Agent3 = PolicyNegotiationAgent
+Agent4 = LLMAgent

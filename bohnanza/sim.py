@@ -10,7 +10,7 @@ from typing import Sequence
 from .agents import Agent, Agent1, Agent2
 from .events import log_event
 from .game import Game, GameConfig, GameResult
-from .llm_agent import Agent3
+from .llm_agent import Agent3, Agent4
 from .trade import TradeValidator
 
 
@@ -18,6 +18,7 @@ AGENT_TYPES: dict[str, type[Agent]] = {
     "Agent1": Agent1,
     "Agent2": Agent2,
     "Agent3": Agent3,
+    "Agent4": Agent4,
 }
 
 
