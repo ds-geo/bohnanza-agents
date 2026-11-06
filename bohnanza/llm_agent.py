@@ -4,15 +4,23 @@ Each helper renders the part of ``Player`` or ``Turn`` state relevant to one
 decision — ordered hand, bean fields, and the legal actions for that move —
 into a compact prompt for an ``LLMClient``. Hands are public information in
 Bohnanza, so trade prompts include the other player's hand too.
+
+``LLMAgent`` sends those prompts, parses the JSON reply, and validates the
+chosen move against the game state. Unparseable or illegal answers fall back
+to a rule-based policy so a bad reply can never break the engine.
 """
 
 from __future__ import annotations
 
-from typing import Iterable
+import json
+from typing import Callable, Iterable, TypeVar
 
+from .agents import Agent, RuleBasedAgent
 from .cards import coins_for
+from .events import log_event
+from .llm import LLMClient
 from .player import Player
-from .trade import TradeOffer
+from .trade import TradeOffer, TradeValidator
 from .turn import Turn
 
 RULES_BRIEF = (
@@ -187,3 +195,204 @@ def _field_lines(player: Player) -> list[str]:
 
 def _indexed(cards: list[str]) -> str:
     return ", ".join(f"{index}={card}" for index, card in enumerate(cards)) or "none"
+
+
+class LLMParseError(ValueError):
+    """The model's reply contained no usable JSON object."""
+
+
+def parse_action(text: str) -> dict:
+    """Extract the decision object from a model reply.
+
+    Tolerates code fences and surrounding prose by scanning for the first
+    balanced ``{...}`` span that parses as JSON. Raises ``LLMParseError``
+    when nothing parses to an object.
+    """
+
+    cleaned = _unfence(text).strip()
+    try:
+        value = json.loads(cleaned)
+    except json.JSONDecodeError:
+        value = _extract_object(cleaned)
+    if not isinstance(value, dict):
+        raise LLMParseError(f"Expected a JSON object, got {value!r}")
+    return value
+
+
+def _unfence(text: str) -> str:
+    return "\n".join(
+        line for line in text.splitlines() if not line.strip().startswith("```")
+    )
+
+
+def _extract_object(text: str) -> object:
+    """Return the first balanced ``{...}`` span that parses as JSON."""
+
+    depth = 0
+    start: int | None = None
+    in_string = False
+    escaped = False
+    for position, char in enumerate(text):
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            if depth == 0:
+                start = position
+            depth += 1
+        elif char == "}" and depth:
+            depth -= 1
+            if depth == 0 and start is not None:
+                try:
+                    return json.loads(text[start : position + 1])
+                except json.JSONDecodeError:
+                    start = None  # keep scanning for the next candidate
+    raise LLMParseError("No JSON object found in the response")
+
+
+_T = TypeVar("_T")
+
+
+class LLMAgent(Agent):
+    """An agent that asks an ``LLMClient`` for each decision.
+
+    Every reply is parsed and checked against the legal moves in the current
+    state; a transport failure, an unparseable reply, or an illegal move is
+    delegated to ``fallback`` (a ``RuleBasedAgent`` by default) and logged as
+    an ``llm.fallback`` event.
+    """
+
+    def __init__(self, client: LLMClient, fallback: Agent | None = None) -> None:
+        self.client = client
+        self.fallback = fallback if fallback is not None else RuleBasedAgent()
+
+    def plant(self, player: Player, bean: str) -> int:
+        try:
+            action = self._ask("plant", plant_prompt(player, bean))
+            index = _int_value(action, "field")
+            if index not in player.legal_fields(bean):
+                raise ValueError(f"Field {index} does not accept {bean}")
+            return index
+        except Exception as exc:
+            return self._recover("plant", exc, self.fallback.plant, player, bean)
+
+    def propose(self, turn: Turn, responder_index: int) -> TradeOffer | None:
+        try:
+            action = self._ask(
+                "propose", propose_prompt(turn, responder_index)
+            )
+            return self._offer_from_action(turn, responder_index, action)
+        except Exception as exc:
+            return self._recover(
+                "propose", exc, self.fallback.propose, turn, responder_index
+            )
+
+    def respond(self, turn: Turn, offer: TradeOffer) -> bool:
+        try:
+            action = self._ask("respond", respond_prompt(turn, offer))
+            accept = action.get("accept")
+            if not isinstance(accept, bool):
+                raise ValueError(f"Expected a boolean 'accept', got {accept!r}")
+            return accept
+        except Exception as exc:
+            return self._recover("respond", exc, self.fallback.respond, turn, offer)
+
+    def harvest(self, player: Player) -> int | None:
+        try:
+            action = self._ask("harvest", harvest_prompt(player))
+            index = _int_value(action, "field")
+            if index >= len(player.fields) or not player.fields[index].beans:
+                raise ValueError(f"Field {index} is not an occupied field")
+            return index
+        except Exception as exc:
+            return self._recover("harvest", exc, self.fallback.harvest, player)
+
+    def _ask(self, decision: str, prompt: str) -> dict:
+        action = parse_action(self.client.complete(prompt).text)
+        log_event("llm.decision", decision=decision, action=action)
+        return action
+
+    def _recover(
+        self,
+        decision: str,
+        error: Exception,
+        fallback: Callable[..., _T],
+        *args: object,
+    ) -> _T:
+        log_event(
+            "llm.fallback",
+            decision=decision,
+            error=type(error).__name__,
+            detail=str(error),
+        )
+        return fallback(*args)
+
+    @staticmethod
+    def _offer_from_action(
+        turn: Turn, responder_index: int, action: dict
+    ) -> TradeOffer | None:
+        """Validate an offer payload before building it, so rejected shapes
+        never reach the ``trade.offered`` event stream."""
+
+        if action.get("pass"):
+            return None
+        give = _int_list(action, "give")
+        take = _int_list(action, "take")
+        if not give and not take:
+            raise ValueError("Offer must give or take at least one card")
+        source = action.get("give_source", "hand")
+        if source not in ("hand", "face_up"):
+            raise ValueError(f"Unknown give_source: {source!r}")
+        if not give:
+            source = "hand"  # giving nothing makes the source moot
+
+        proposer = turn.active_index
+        face_up = source == "face_up"
+        give_bound = len(turn.face_up) if face_up else len(turn.players[proposer].hand)
+        _check_indices(give, give_bound, "give")
+        _check_indices(take, len(turn.players[responder_index].hand), "take")
+
+        offer = TradeOffer(
+            proposer=proposer,
+            responder=responder_index,
+            proposer_gives=give,
+            responder_gives=take,
+            proposer_face_up=face_up,
+        )
+        valid, reason = TradeValidator(
+            turn.players, turn.active_index, len(turn.face_up)
+        ).validate(offer)
+        if not valid:
+            raise ValueError(reason)
+        return offer
+
+
+def _int_value(action: dict, key: str) -> int:
+    raw = action.get(key)
+    if isinstance(raw, bool) or not isinstance(raw, int):
+        raise ValueError(f"Expected an integer for {key!r}, got {raw!r}")
+    if raw < 0:
+        raise ValueError(f"Expected a non-negative index for {key!r}")
+    return raw
+
+
+def _int_list(action: dict, key: str) -> list[int]:
+    raw = action.get(key, [])
+    if not isinstance(raw, list):
+        raise ValueError(f"Expected a list for {key!r}, got {raw!r}")
+    return [
+        _int_value({key: index}, key) for index in raw
+    ]
+
+
+def _check_indices(indices: list[int], bound: int, side: str) -> None:
+    for index in indices:
+        if index >= bound:
+            raise ValueError(f"{side} index {index} is out of range")
